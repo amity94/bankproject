@@ -54,8 +54,8 @@ namespace hw2003
                 custID_Dict.Add(cust.CustomerID, cust);
                 custNumber_Dict.Add(cust.CustomerNumber, cust);
 
-                List<Account> accountlist;
-                account_Dict.TryGetValue(cust, out accountlist);
+                List<Account> accountlist = new List<Account>();
+                account_Dict.Add(cust, accountlist);
             }
         }
 
@@ -66,8 +66,7 @@ namespace hw2003
                 acclist.Add(acc);
                 accountNumber_Dict.Add(acc.AccountNumber, acc);
 
-                List<Account> customerlist;
-                account_Dict.TryGetValue(cust, out customerlist);
+                account_Dict.TryGetValue(cust, out  List<Account> customerlist);
                 customerlist.Add(acc);
                 return true;
             }
@@ -135,8 +134,24 @@ namespace hw2003
 
         internal void JoinAccount(Account acc1, Account acc2)
         {
-            Account acc3 =  acc1 + acc2;
-            //not finished!!
+
+            if (acc1.AccountOwner == acc2.AccountOwner)
+            {
+                Account acc3 = acc1 + acc2;
+                
+                acclist.Remove(acc1);
+                acclist.Remove(acc2);
+                acclist.Add(acc3);
+
+                accountNumber_Dict.Remove(acc1.AccountNumber);
+                accountNumber_Dict.Remove(acc2.AccountNumber);
+                accountNumber_Dict.Add(acc3.AccountNumber, acc3);
+
+                account_Dict.TryGetValue(acc3.AccountOwner, out List<Account> customerlist);
+                customerlist.Remove(acc1);
+                customerlist.Remove(acc2);
+                customerlist.Add(acc3);
+            }
         }
 
         public Bank()
